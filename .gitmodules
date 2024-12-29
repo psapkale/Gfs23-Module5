@@ -1,0 +1,3 @@
+[submodule "weather-app-assignment"]
+	path = weather-app-assignment
+	url = https://github.com/psapkale/weather-app-assignment.git
