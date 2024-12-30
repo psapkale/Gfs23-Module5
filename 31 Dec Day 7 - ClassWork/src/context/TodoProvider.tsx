@@ -13,7 +13,7 @@ interface TodoContextType {
 
 const TodoContext = createContext<TodoContextType>({
    todos: [],
-   setTodos: (todos: TodoType[]) => {},
+   setTodos: () => {},
 });
 
 const useTodo = () => useContext(TodoContext);
