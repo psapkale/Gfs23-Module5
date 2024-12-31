@@ -11,6 +11,7 @@ const Pagination = ({
    index,
    setIndex,
    offset,
+   // @ts-ignore
    setOffset,
 }: Props) => {
    const handlePrev = () => {
