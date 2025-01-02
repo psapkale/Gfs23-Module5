@@ -1,10 +1,12 @@
 import { INoteAtom, useAllNotes } from "../store/atoms/allNotesAtom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import NoteTab from "./NoteTab";
 import CreateNote from "./CreateNote";
+import { useMode } from "../store/atoms/modeAtom";
 
 const Sidebar = () => {
    const [allNotes, setAllNotes] = useAllNotes(useRecoilState);
+   const setMode = useMode(useSetRecoilState);
 
    const getUpdatedCurrentStateOfAllNotes = (
       note: INoteAtom,
@@ -34,6 +36,7 @@ const Sidebar = () => {
                (a: INoteAtom, b: INoteAtom) => a.createdAt - b.createdAt
             )
          );
+         setMode("write");
       }
    };
 
@@ -43,13 +46,14 @@ const Sidebar = () => {
 
       if (note) {
          setAllNotes(allNotes.filter((x: INoteAtom) => x.id !== note.id));
+         setMode("write");
       }
    };
 
    const handleCreateNote = () => {
       const newNote: INoteAtom = {
          id: Math.random(),
-         title: `My Note (@${Math.ceil(Math.random() * 100)})`,
+         title: `My Editor (@${Math.ceil(Math.random() * 100)})`,
          content: "# With great ideas comes great notes💪",
          isCurrentNote: true,
          createdAt: Date.now(),
@@ -62,6 +66,7 @@ const Sidebar = () => {
             (a: INoteAtom, b: INoteAtom) => a.createdAt - b.createdAt
          )
       );
+      setMode("write");
    };
 
    return (

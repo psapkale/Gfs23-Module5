@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
    Heading,
    Bold,
@@ -19,7 +18,7 @@ const Header = () => {
 
    return (
       <div className="w-full py-2 px-10 flex items-center text-white bg-blue-500 justify-between">
-         <h1 className="text-2xl font-bold">Note App</h1>
+         <h1 className="text-2xl font-bold">Markdown Editor App</h1>
          <div className="flex items-center justify-between gap-2">
             <button
                onClick={() => setMode("write")}

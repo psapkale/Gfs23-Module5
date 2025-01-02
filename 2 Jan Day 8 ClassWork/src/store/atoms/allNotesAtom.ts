@@ -15,7 +15,7 @@ const allNotesAtom = atom<IAllNotesAtom>({
    default: [
       {
          id: Math.random(),
-         title: "My Note 1",
+         title: "My Editor 1",
          content: "# With great ideas comes great notes💪",
          isCurrentNote: true,
          createdAt: Date.now(),
