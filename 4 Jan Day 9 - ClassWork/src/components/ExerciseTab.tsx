@@ -13,8 +13,10 @@ const ExerciseTab = ({ exercise }: Props) => {
             className="w-[400px] h-[300px]"
          />
          <hr className="w-full border border-slate-20 mt-2" />
-         <h1 className="capitalize mt-2">{exercise.name}</h1>
-         <h2 className="capitalize">{exercise.equipment}</h2>
+         <h1 className="w-full capitalize mt-2 text-md font-bold">
+            {exercise.name}
+         </h1>
+         <h2 className="capitalize text-sm">{exercise.equipment}</h2>
       </div>
    );
 };

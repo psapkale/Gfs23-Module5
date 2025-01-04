@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { e } from "../utils";
+import axios from "axios";
 
 export interface IExercise {
    id: string;
@@ -12,34 +13,34 @@ export interface IExercise {
    instructions: string[];
 }
 
-export const useExercises = (offset: number) => {
-   const [exercises, setExercices] = useState<IExercise[]>(e);
-   // @ts-ignore
-   const options = {
-      method: "GET",
-      url: "https://exercisedb.p.rapidapi.com/exercises",
-      params: {
-         limit: "10",
-         offset,
-      },
-      headers: {
-         "x-rapidapi-key": import.meta.env.VITE_RAPIDAPIKEY,
-         "x-rapidapi-host": "exercisedb.p.rapidapi.com",
-      },
+export const useExercises = () => {
+   const [exercises, setExercises] = useState<IExercise[]>(e);
+
+   const getExercises = async (offset: number) => {
+      const options = {
+         method: "GET",
+         url: "https://exercisedb.p.rapidapi.com/exercises",
+         params: {
+            limit: "10",
+            offset,
+         },
+         headers: {
+            "x-rapidapi-key": import.meta.env.VITE_RAPIDAPIKEY,
+            "x-rapidapi-host": "exercisedb.p.rapidapi.com",
+         },
+      };
+
+      try {
+         const response = await axios.request(options);
+         console.log(response.data);
+      } catch (error) {
+         console.error(error);
+      }
    };
 
-   const getExercises = async () => {
-      // try {
-      //    const response = await axios.request(options);
-      //    console.log(response.data);
-      // setExercices(response.data)
-      // } catch (error) {
-      //    console.error(error);
-      // }
-   };
+   useEffect(() => {
+      getExercises(0);
+   }, []);
 
-   getExercises();
-   // setExercices(e);
-
-   return { exercises, setExercices };
+   return { exercises, setExercises, getExercises };
 };

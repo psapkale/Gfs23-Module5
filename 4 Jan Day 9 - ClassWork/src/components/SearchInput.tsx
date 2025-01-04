@@ -1,9 +1,26 @@
 import { useState } from "react";
+import { IExercise, useExercises } from "../hooks/useExercices";
 
 const SearchInput = () => {
+   const { exercises, setExercises } = useExercises();
+   const [saveExercises] = useState(exercises);
    const [query, setQuery] = useState("");
 
-   const handleSearch = () => {};
+   const handleSearch = () => {
+      if (!query.length) {
+         setExercises(saveExercises);
+         return;
+      }
+
+      const updatedExercises = saveExercises.filter((x: IExercise) => {
+         return (
+            x.name.toLowerCase().includes(query.toLowerCase()) ||
+            x.bodyPart.toLowerCase().includes(query.toLowerCase())
+         );
+      });
+
+      setExercises(updatedExercises);
+   };
 
    return (
       <div className="border-b  py-8 px-32 flex items-center justify-between">
