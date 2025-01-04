@@ -1,4 +1,3 @@
-import React from "react";
 import { useExercises } from "../hooks/useExercices";
 import ExerciseTab from "./ExerciseTab";
 

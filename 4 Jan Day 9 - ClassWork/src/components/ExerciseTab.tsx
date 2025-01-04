@@ -1,4 +1,3 @@
-import React from "react";
 import { IExercise } from "../hooks/useExercices";
 
 interface Props {

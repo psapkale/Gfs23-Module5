@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState } from "react";
 import { e } from "../utils";
 
@@ -15,6 +14,7 @@ export interface IExercise {
 
 export const useExercises = (offset: number) => {
    const [exercises, setExercices] = useState<IExercise[]>(e);
+   // @ts-ignore
    const options = {
       method: "GET",
       url: "https://exercisedb.p.rapidapi.com/exercises",
