@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { localQuestions } from "../utils";
 
 const API_URL =
    "https://opentdb.com/api.php?amount=10&category=9&type=multiple";
@@ -21,14 +20,12 @@ export const useQuestions = () => {
    );
 
    const getQuestions = async () => {
-      // await axios
-      //    .get(API_URL)
-      //    .then((res) => setQuestions(res.data.results))
-      //    .catch(() => {
-      //       setError({ message: "Something went wrong" });
-      //    });
-
-      setQuestions(localQuestions);
+      await axios
+         .get(API_URL)
+         .then((res) => setQuestions(res.data.results))
+         .catch(() => {
+            setError({ message: "Something went wrong" });
+         });
    };
 
    useEffect(() => {
