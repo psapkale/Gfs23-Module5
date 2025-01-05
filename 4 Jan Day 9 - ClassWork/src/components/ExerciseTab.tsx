@@ -1,4 +1,4 @@
-import { IExercise } from "../hooks/useExercices";
+import { IExercise } from "../context/ExerciseContext";
 
 interface Props {
    exercise: IExercise;

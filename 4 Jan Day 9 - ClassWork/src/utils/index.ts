@@ -1,4 +1,4 @@
-import { IExercise } from "../hooks/useExercices";
+import { IExercise } from "../context/ExerciseContext";
 
 export const e: IExercise[] = [
    {

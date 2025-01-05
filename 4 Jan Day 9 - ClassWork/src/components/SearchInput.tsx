@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IExercise, useExercises } from "../hooks/useExercices";
+import { IExercise, useExercises } from "../context/ExerciseContext";
 
 const SearchInput = () => {
    const { exercises, setExercises } = useExercises();

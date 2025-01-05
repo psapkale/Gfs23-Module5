@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 import { e } from "../utils";
 import axios from "axios";
 
@@ -13,8 +13,18 @@ export interface IExercise {
    instructions: string[];
 }
 
-export const useExercises = () => {
-   const [exercises, setExercises] = useState<IExercise[]>(e);
+interface IExerciseContext {
+   exercises: IExercise[];
+   setExercises: (exercises: IExercise[]) => void;
+}
+
+const ExerciseContext = createContext<IExerciseContext>({
+   exercises: e,
+   setExercises: () => {},
+});
+
+const useExercises = () => {
+   const { exercises, setExercises } = useContext(ExerciseContext);
 
    const getExercises = async (offset: number) => {
       const options = {
@@ -32,15 +42,23 @@ export const useExercises = () => {
 
       try {
          const response = await axios.request(options);
-         console.log(response.data);
+         setExercises(response.data);
       } catch (error) {
          console.error(error);
       }
    };
 
-   useEffect(() => {
-      getExercises(0);
-   }, []);
-
    return { exercises, setExercises, getExercises };
 };
+
+const ExerciseProvider = ({ children }: { children: React.ReactNode }) => {
+   const [exercises, setExercises] = useState<IExercise[]>(e);
+
+   return (
+      <ExerciseContext.Provider value={{ exercises, setExercises }}>
+         {children}
+      </ExerciseContext.Provider>
+   );
+};
+
+export { useExercises, ExerciseProvider };

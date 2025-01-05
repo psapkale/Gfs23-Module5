@@ -1,15 +1,9 @@
 import { useEffect, useState } from "react";
-import { IExercise } from "../hooks/useExercices";
 import ExerciseTab from "./ExerciseTab";
+import { useExercises } from "../context/ExerciseContext";
 
-interface Props {
-   exercises: IExercise[];
-   getExercises: (i: number) => void;
-}
-
-const ExerciseSet = ({ exercises, getExercises }: Props) => {
-   console.log(exercises);
-
+const ExerciseSet = () => {
+   const { exercises, getExercises } = useExercises();
    const [currIndex, setCurrIndex] = useState(0);
 
    const handlePrev = () => {
