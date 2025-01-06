@@ -3,47 +3,62 @@ import { useEffect, useState } from "react";
 import ImageList from "./ImageList";
 
 const ScrollContainer = ({ query }: { query: string }) => {
-   const [imgList, setImgList] = useState<any>([]);
-   const [page, setPage] = useState(0);
+  const [imgList, setImgList] = useState<any>([]);
+  const [page, setPage] = useState(0);
 
-   const loadFn = async () => {
-      await axios
-         .get(
-            `https://api.unsplash.com/search/photos?page=${page}&query=${query}&per_page=20&client_id=${
-               import.meta.env.VITE_UNSPLASH_API_KEY
-            }`
-         )
-         .then((res) => setImgList([...imgList, ...res.data]));
-   };
+  console.log(imgList);
 
-   useEffect(() => {
-      loadFn();
-   }, [page, query]);
+  const loadFn = async () => {
+    //  await axios
+    //    .get(
+    //      `https://api.unsplash.com/photos?page=${page}&query=${query}&per_page=20&client_id=${
+    //        import.meta.env.VITE_UNSPLASH_API_KEY
+    //      }`
+    //    )
+    //    .then((res) => setImgList([...imgList, ...res.data]))
+    //    .catch((err) => console.error(err));
 
-   useEffect(() => {
-      const handleAppendImages = () => {
-         if (
-            window.scrollY + window.innerHeight + 100 >=
-            document.body.offsetHeight
-         ) {
-            setPage(page + 1);
-         }
-      };
+    await axios
+      .get(
+        `https://api.unsplash.com/search/photos?page=${page}&query=${
+          !query.length ? "tree" : query
+        }&client_id=${import.meta.env.VITE_UNSPLASH_API_KEY}`
+      )
+      .then((res) => {
+        console.log(res);
 
-      window.addEventListener("scroll", handleAppendImages);
+        setImgList([...imgList, ...res.data.results]);
+      });
+  };
 
-      return () => window.removeEventListener("scroll", handleAppendImages);
-   }, []);
+  useEffect(() => {
+    setImgList([]);
+  }, [query]);
 
-   return (
-      <div>
-         {!imgList.length ? (
-            <div>loading...</div>
-         ) : (
-            <ImageList images={imgList} />
-         )}
-      </div>
-   );
+  useEffect(() => {
+    loadFn();
+  }, [page, query]);
+
+  useEffect(() => {
+    const handleAppendImages = () => {
+      if (
+        window.scrollY + window.innerHeight + 200 >=
+        document.body.offsetHeight
+      ) {
+        setPage(page + 1);
+      }
+    };
+
+    window.addEventListener("scroll", handleAppendImages);
+
+    return () => window.removeEventListener("scroll", handleAppendImages);
+  }, []);
+
+  return (
+    <div>
+      {!imgList.length ? <div>loading...</div> : <ImageList images={imgList} />}
+    </div>
+  );
 };
 
 export default ScrollContainer;
