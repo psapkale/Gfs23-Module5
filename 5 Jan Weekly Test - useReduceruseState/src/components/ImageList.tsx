@@ -4,38 +4,39 @@ import Masonry from "react-masonry-css";
 import ImageCard from "./ImageCard";
 
 interface Props {
-   images: any;
+  images: any;
 }
 
 const breakpointColumnsObj = {
-   default: 4,
-   1100: 3,
-   700: 2,
-   500: 1,
+  default: 4,
+  1100: 3,
+  700: 2,
+  500: 1,
 };
 
 const ImageList = ({ images }: Props) => {
-   return (
-      <>
-         <Container fluid className="mt-4 mx-5">
-            <Row>
-               <Masonry
-                  breakpointCols={breakpointColumnsObj}
-                  className="my-masonry-grid"
-                  columnClassName="my-masonry-grid_column"
-               >
-                  {images.map((single_image, idx) => {
-                     return (
-                        <Col key={idx}>
-                           <ImageCard image_details={single_image} />
-                        </Col>
-                     );
-                  })}
-               </Masonry>
-            </Row>
-         </Container>
-      </>
-   );
+  return (
+    <>
+      <Container fluid className="mt-4 mx-5">
+        <Row>
+          <Masonry
+            breakpointCols={breakpointColumnsObj}
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column"
+          >
+            {images.map((single_image, idx) => {
+              return (
+                <Col key={idx}>
+                  <ImageCard image_details={single_image} />
+                </Col>
+              );
+            })}
+          </Masonry>
+        </Row>
+      </Container>
+      <div className="text-center mt-3">end of results</div>
+    </>
+  );
 };
 
 export default ImageList;
