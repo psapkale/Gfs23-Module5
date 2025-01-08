@@ -9,7 +9,7 @@ interface Props {
 
 const TaskTab = ({ task, handleDeleteTask }: Props) => {
    return (
-      <div className="border border-black rounded-md py-2 px-2 flex items-center justify-between group cursor-pointer">
+      <div className="w-full border rounded-md py-2 px-2 flex items-center justify-between group cursor-pointer">
          <h1>{task.content}</h1>
          <Button
             variant={"secondary"}

@@ -41,7 +41,7 @@ const firstTasksContainers: ITasksContainer[] = [
             createdAt: Date.now(),
          },
       ],
-      createdAt: Date.now(),
+      createdAt: Date.now() + 1,
    },
 ];
 
@@ -71,6 +71,17 @@ const useTasksContainers = () => {
       );
    };
 
+   const createContainer = (title: string) => {
+      const newContainer: ITasksContainer = {
+         id: Math.random(),
+         title,
+         tasksList: [],
+         createdAt: Date.now(),
+      };
+
+      setTasksContainers([...tasksContainers, newContainer]);
+   };
+
    const createTask = (content: string, parentId: number) => {
       const parentContainer = getParentContainer(parentId);
 
@@ -81,8 +92,13 @@ const useTasksContainers = () => {
             createdAt: Date.now(),
          };
 
-         parentContainer.tasksList.push(newTask);
-         updateTasksContainers(parentContainer);
+         const udpatedTasksList = [...parentContainer.tasksList, newTask];
+         const updatedParentContainer = {
+            ...parentContainer,
+            tasksList: udpatedTasksList,
+         };
+
+         updateTasksContainers(updatedParentContainer);
       }
    };
 
@@ -90,11 +106,16 @@ const useTasksContainers = () => {
       const parentContainer = getParentContainer(parentId);
 
       if (parentContainer) {
-         parentContainer.tasksList = parentContainer.tasksList.filter(
+         const udpatedTasksList = parentContainer.tasksList.filter(
             (x: ITask) => x.id !== taskId
          );
 
-         updateTasksContainers(parentContainer);
+         const updatedParentContainer = {
+            ...parentContainer,
+            tasksList: udpatedTasksList,
+         };
+
+         updateTasksContainers(updatedParentContainer);
       }
    };
 
@@ -113,19 +134,30 @@ const useTasksContainers = () => {
          );
 
          if (task) {
-            parentContainer.tasksList = parentContainer.tasksList.filter(
+            task.createdAt = Date.now();
+
+            const udpatedTasksList = parentContainer.tasksList.filter(
                (x: ITask) => x.id !== taskId
             );
-            updateTasksContainers(parentContainer);
+            const updatedParentContainer = {
+               ...parentContainer,
+               tasksList: udpatedTasksList,
+            };
+            updateTasksContainers(updatedParentContainer);
 
-            newParentContainer.tasksList.push(task);
-            updateTasksContainers(newParentContainer);
+            const updatedNewTasksList = [...newParentContainer.tasksList, task];
+            const updatedNewParentContainer = {
+               ...newParentContainer,
+               tasksList: updatedNewTasksList,
+            };
+            updateTasksContainers(updatedNewParentContainer);
          }
       }
    };
 
    return {
       tasksContainers,
+      createContainer,
       createTask,
       deleteTask,
       updateTasksParentState,

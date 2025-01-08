@@ -9,7 +9,7 @@ const Footer = () => {
             >
                This
             </a>
-            <span>will make you believe it's made in Vanilla TS</span>
+            <span>will make you believe DnD is easier in Vanilla TS</span>
          </h1>
       </footer>
    );
