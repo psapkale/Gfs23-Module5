@@ -15,7 +15,7 @@ export interface ITasksContainer {
 
 interface ITasksContext {
    tasksContainers: ITasksContainer[];
-   setTasksContainers: (tasksContainers: ITasksContainer[]) => void;
+   setTasksContainers: React.Dispatch<React.SetStateAction<ITasksContainer[]>>;
 }
 
 const firstTasksContainers: ITasksContainer[] = [
@@ -47,7 +47,7 @@ const firstTasksContainers: ITasksContainer[] = [
 
 const TasksContext = createContext<ITasksContext>({
    tasksContainers: firstTasksContainers,
-   setTasksContainers: (tasksContainers: ITasksContainer[]) => {},
+   setTasksContainers: () => {},
 });
 
 const useTasksContainers = () => {
@@ -124,6 +124,10 @@ const useTasksContainers = () => {
       parentId: number,
       newParentId: number
    ) => {
+      if (parentId === newParentId) {
+         return;
+      }
+
       // ! remove task from parent container and move it to its respective parent container
       const parentContainer = getParentContainer(parentId);
       const newParentContainer = getParentContainer(newParentId);
@@ -134,8 +138,6 @@ const useTasksContainers = () => {
          );
 
          if (task) {
-            task.createdAt = Date.now();
-
             const udpatedTasksList = parentContainer.tasksList.filter(
                (x: ITask) => x.id !== taskId
             );
@@ -143,14 +145,26 @@ const useTasksContainers = () => {
                ...parentContainer,
                tasksList: udpatedTasksList,
             };
-            updateTasksContainers(updatedParentContainer);
 
-            const updatedNewTasksList = [...newParentContainer.tasksList, task];
+            // ? assign new id and created property to task
+            const updatedNewTasksList = [
+               ...newParentContainer.tasksList,
+               { ...task, id: Math.random(), createdAt: Date.now() },
+            ];
             const updatedNewParentContainer = {
                ...newParentContainer,
                tasksList: updatedNewTasksList,
             };
-            updateTasksContainers(updatedNewParentContainer);
+
+            setTasksContainers((prev: ITasksContainer[]) =>
+               prev.map((x: ITasksContainer) =>
+                  x.id === parentId
+                     ? updatedParentContainer
+                     : x.id === newParentId
+                     ? updatedNewParentContainer
+                     : x
+               )
+            );
          }
       }
    };

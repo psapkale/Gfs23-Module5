@@ -6,8 +6,13 @@ import { DialogDescription } from "./ui/dialog";
 import CustomInputDialog from "./CustomInputDialog";
 
 const ContainerHolder = () => {
-   const { tasksContainers, createContainer, createTask, deleteTask } =
-      useTasksContainers();
+   const {
+      tasksContainers,
+      createContainer,
+      createTask,
+      deleteTask,
+      updateTasksParentState,
+   } = useTasksContainers();
 
    return (
       <div className="h-[90vh] p-12 bg-purple-600 flex items-start justify-evenly gap-8 overflow-x-scroll trello-scrollbar">
@@ -19,6 +24,7 @@ const ContainerHolder = () => {
                tasksList={container.tasksList}
                createTask={createTask}
                deleteTask={deleteTask}
+               updateTasksParentState={updateTasksParentState}
             />
          ))}
          <CustomInputDialog

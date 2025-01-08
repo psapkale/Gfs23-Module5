@@ -18,6 +18,11 @@ interface Props {
    tasksList: ITask[];
    createTask: (content: string, parentId: number) => void;
    deleteTask: (taskId: number, parentId: number) => void;
+   updateTasksParentState: (
+      taskId: number,
+      parentId: number,
+      newParentId: number
+   ) => void;
 }
 
 const TaskContainer = ({
@@ -26,24 +31,48 @@ const TaskContainer = ({
    tasksList,
    createTask,
    deleteTask,
+   updateTasksParentState,
 }: Props) => {
    const handleDeleteTask = (taskId: number) => {
       deleteTask(taskId, containerId);
    };
 
+   const handleDrop = (e: React.DragEvent) => {
+      const { taskId, parentId } = JSON.parse(
+         e.dataTransfer.getData("taskTransferData")
+      );
+
+      updateTasksParentState(taskId, parentId, containerId);
+   };
+
+   const handleOnDragOver = (e: React.DragEvent) => {
+      e.preventDefault();
+   };
+
    return (
-      <Card className="min-w-[28vw] bg-slate-50">
+      <Card
+         className="min-w-[28vw] bg-white"
+         onDrop={handleDrop}
+         onDragOver={handleOnDragOver}
+      >
          <CardHeader>
             <CardTitle className="capitalize">{title}</CardTitle>
          </CardHeader>
          <CardContent className="flex items-center justify-center gap-2 flex-col">
-            {tasksList.map((task) => (
-               <TaskTab
-                  key={task.id}
-                  task={task}
-                  handleDeleteTask={handleDeleteTask}
-               />
-            ))}
+            {!tasksList.length ? (
+               <span className="text-xs text-gray-500">
+                  Great, nothing to do in here 🏔
+               </span>
+            ) : (
+               tasksList.map((task) => (
+                  <TaskTab
+                     key={task.id}
+                     task={task}
+                     parentId={containerId}
+                     handleDeleteTask={handleDeleteTask}
+                  />
+               ))
+            )}
          </CardContent>
          <CardFooter>
             <CustomInputDialog
