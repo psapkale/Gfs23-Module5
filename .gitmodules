@@ -1,3 +1,6 @@
 [submodule "weather-app-assignment"]
 	path = weather-app-assignment
 	url = https://github.com/psapkale/weather-app-assignment.git
+[submodule "react-builds"]
+    path = react-builds
+    url = https://github.com/psapkale/react-builds.git
