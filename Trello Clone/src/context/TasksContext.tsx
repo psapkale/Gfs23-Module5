@@ -1,84 +1,133 @@
 import { createContext, useContext, useState } from "react";
 
-interface ITask {
+export interface ITask {
    id: number;
    content: string;
    createdAt: number;
-   parentTitle: string;
 }
 
-interface ITasksContainers {
+export interface ITasksContainer {
    id: number;
    title: string;
    tasksList: ITask[];
+   createdAt: number;
 }
 
 interface ITasksContext {
-   tasksContainers: ITasksContainers[];
-   setTasksContainers: (tasksContainers: ITasksContainers[]) => void;
+   tasksContainers: ITasksContainer[];
+   setTasksContainers: (tasksContainers: ITasksContainer[]) => void;
 }
 
-const firstTasksContainers: ITasksContainers[] = [
+const firstTasksContainers: ITasksContainer[] = [
    {
-      id: Math.random(),
+      id: 1,
       title: "To Do",
       tasksList: [
          {
-            id: Math.random(),
+            id: 1,
             content: "do todo",
             createdAt: Date.now(),
-            parentTitle: "To Do",
          },
       ],
+      createdAt: Date.now(),
    },
    {
-      id: Math.random(),
+      id: 2,
       title: "In Progress",
       tasksList: [
          {
-            id: Math.random(),
+            id: 2,
             content: "this is in progress",
             createdAt: Date.now(),
-            parentTitle: "In Progress",
          },
       ],
+      createdAt: Date.now(),
    },
 ];
 
 const TasksContext = createContext<ITasksContext>({
    tasksContainers: firstTasksContainers,
-   setTasksContainers: (tasksContainers: ITasksContainers[]) => {},
+   setTasksContainers: (tasksContainers: ITasksContainer[]) => {},
 });
 
 const useTasksContainers = () => {
    const { tasksContainers, setTasksContainers } = useContext(TasksContext);
 
-   const addTaskToContainer = (
-      task: ITask,
-      parentId: number,
-      parentTitle: string
-   ) => {};
+   const getParentContainer = (parentId: number) => {
+      return tasksContainers.find((x: ITasksContainer) => x.id === parentId);
+   };
 
-   const deleteTaskFromContainer = (
-      taskId: number,
-      parentId: number,
-      parentTitle: string
-   ) => {};
+   const updateTasksContainers = (parentContainer: ITasksContainer) => {
+      setTasksContainers(
+         [
+            parentContainer,
+            ...tasksContainers.filter(
+               (x: ITasksContainer) => x.id !== parentContainer.id
+            ),
+         ].sort(
+            (a: ITasksContainer, b: ITasksContainer) =>
+               a.createdAt - b.createdAt
+         )
+      );
+   };
+
+   const createTask = (content: string, parentId: number) => {
+      const parentContainer = getParentContainer(parentId);
+
+      if (parentContainer) {
+         const newTask: ITask = {
+            id: Math.random(),
+            content,
+            createdAt: Date.now(),
+         };
+
+         parentContainer.tasksList.push(newTask);
+         updateTasksContainers(parentContainer);
+      }
+   };
+
+   const deleteTask = (taskId: number, parentId: number) => {
+      const parentContainer = getParentContainer(parentId);
+
+      if (parentContainer) {
+         parentContainer.tasksList = parentContainer.tasksList.filter(
+            (x: ITask) => x.id !== taskId
+         );
+
+         updateTasksContainers(parentContainer);
+      }
+   };
 
    const updateTasksParentState = (
       taskId: number,
       parentId: number,
-      parentTitle: string,
-      newParentId: number,
-      newParentTitle: string
+      newParentId: number
    ) => {
-      // ! update tasks parentTitle and move it to its respective parent container
+      // ! remove task from parent container and move it to its respective parent container
+      const parentContainer = getParentContainer(parentId);
+      const newParentContainer = getParentContainer(newParentId);
+
+      if (parentContainer && newParentContainer) {
+         const task = parentContainer.tasksList.find(
+            (x: ITask) => x.id === taskId
+         );
+
+         if (task) {
+            parentContainer.tasksList = parentContainer.tasksList.filter(
+               (x: ITask) => x.id !== taskId
+            );
+            updateTasksContainers(parentContainer);
+
+            newParentContainer.tasksList.push(task);
+            updateTasksContainers(newParentContainer);
+         }
+      }
    };
 
    return {
       tasksContainers,
-      addTaskToContainer,
-      deleteTaskFromContainer,
+      createTask,
+      deleteTask,
       updateTasksParentState,
    };
 };
@@ -89,7 +138,7 @@ const TasksContainersProvider = ({
    children: React.ReactNode;
 }) => {
    const [tasksContainers, setTasksContainers] =
-      useState<ITasksContainers[]>(firstTasksContainers);
+      useState<ITasksContainer[]>(firstTasksContainers);
 
    return (
       <TasksContext.Provider value={{ tasksContainers, setTasksContainers }}>
